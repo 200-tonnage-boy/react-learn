@@ -1,7 +1,7 @@
 // import React from "react";
 // import ReactDOM from "react-dom";
-import React from "./componentFNC/react";
-import ReactDOM from "./componentFNC/react-dom";
+import React from "./component/react";
+import ReactDOM from "./component/react-dom";
 import "./index.css";
 
 const FNCComponents = (props) => {
