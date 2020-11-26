@@ -1,5 +1,7 @@
 function render (VDom, parentDom) {
+  console.log('myrender')
   let dom = createDom(VDom)// 通过虚拟DOM生成真实DOM，
+  // console.log(dom)
   parentDom.appendChild(dom)// 挂载到父节点上
 }
 
@@ -7,17 +9,23 @@ function render (VDom, parentDom) {
  * 把虚拟DOM 转换为真实DOM，并插入到页面
  */
 function createDom (vdom) {
+  // 布尔值JSX不会渲染，Array.length这种会渲染，因此不能用于条件渲染，都会输出到页面
   if (typeof vdom === 'string' || typeof vdom === 'number') {
     return document.createTextNode(vdom)
   }
   let {type, props} = vdom
 
   let dom = document.createElement(type)
-  updateProps(dom, props)
+  updateProps(dom, props)// 更新DOM属性，class  行内样式等等
   if(typeof props.children==='string' || typeof props.children === 'number') {
-
+    dom.textContent = props.children
+  }else if (typeof props.children == 'object'&& props.children.type){// 单个react子元素
+    render(props.children, dom)
+  }else if (Array.isArray(props.children)) {
+    reconcileChildren(props.children, dom)
+  } else {
+    dom.textContent = props.children?props.children.toString():''
   }
-  reconcileChildren(props.children, dom)
   return dom
 }
 
@@ -35,6 +43,8 @@ function updateProps (dom, props) {
       }
     } else if (key === 'children'){continue}
     else {
+      // dom是通过document.creatElement创建，返回值是一个对象，
+      // 对象的属性就是ClassName代表实际DOM的class，因此这里可以直接赋值
       dom[key] = props[key]
     }
   }
@@ -49,4 +59,8 @@ function reconcileChildren (children, parentDOM) {
   for (let i=0; i<children.length; i++) {
     render(children[i], parentDOM)
   }
+}
+
+export default {
+  render
 }

@@ -1,5 +1,6 @@
 function createElement (type, config, children) {
-  if(config) {// 源代码里的
+  console.log('mycreateElement')
+  if(config) {// 源代码里的 暂时无用
     delete config.__source
     delete config.__self
   }
