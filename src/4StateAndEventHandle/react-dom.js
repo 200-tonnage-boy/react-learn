@@ -1,3 +1,4 @@
+import {addEvent} from './event'
 function render(VDom, parentDom) {
   console.log("myrender");
   let dom = createDom(VDom); // 通过虚拟DOM生成真实DOM，
@@ -77,7 +78,9 @@ function updateProps(dom, props) {
       }
     } else if (key === "children") {
       continue;
-    } else {
+    } else if (key.startsWith('on')){// 绑定事件
+      addEvent(dom, key.toLocaleLowerCase(), props[key])
+    }else {
       // dom是通过document.creatElement创建，返回值是一个对象，
       // 对象的属性就是ClassName代表实际DOM的class，因此这里可以直接赋值
       dom[key] = props[key];
