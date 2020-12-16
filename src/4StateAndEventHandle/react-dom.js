@@ -2,7 +2,6 @@ import {addEvent} from './event'
 function render(VDom, parentDom) {
   console.log("myrender");
   let dom = createDom(VDom); // 通过虚拟DOM生成真实DOM，
-  // console.log(dom)
   parentDom.appendChild(dom); // 挂载到父节点上
 }
 
@@ -10,6 +9,8 @@ function render(VDom, parentDom) {
  * 把虚拟DOM 转换为真实DOM，并插入到页面
  */
 function createDom(vdom) {
+  // debugger
+  console.log('createDom')
   // 布尔值JSX不会渲染，Array.length这种会渲染，因此不能用于条件渲染，都会输出到页面
   if (typeof vdom === "string" || typeof vdom === "number") {
     return document.createTextNode(vdom);
