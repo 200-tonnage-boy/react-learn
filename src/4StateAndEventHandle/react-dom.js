@@ -6,7 +6,7 @@ function render(VDom, parentDom) {
 }
 
 /**
- * 把虚拟DOM 转换为真实DOM，并插入到页面
+ * 把虚拟DOM 转换为真实DOM
  */
 function createDom(vdom) {
   // debugger
@@ -23,7 +23,6 @@ function createDom(vdom) {
     return type.isReactComponent// 类组件添加了这个静态属性用于鉴别
       ? undateClassComponent(vdom)
       : undateFunctionComponent(vdom);
-    // return undateFunctionComponent(vdom)
   } else {
     dom = document.createElement(type);
   }
@@ -59,10 +58,13 @@ function undateFunctionComponent(vdom) {
  * @param {*} vdom 虚拟DOM
  */
 function undateClassComponent (vdom) {
-  const {type, props} = vdom
-  const classVDOMInstance = new type(props)// 实例化
-  const ClassVDOM = classVDOMInstance.render()// 调用render方法
-  return createDom(ClassVDOM)
+  const {type:classComponents, props} = vdom// 给type起个别名，type就是class本身
+  const classVDOMInstance = new classComponents(props)// 实例化
+  const classVDOM = classVDOMInstance.render()// 调用render方法
+  console.log('test class render', classVDOM)
+  const dom = createDom(classVDOM)
+  classVDOMInstance.dom = dom// 类组件生成的实例上
+  return dom
 }
 
 /**
@@ -102,4 +104,5 @@ function reconcileChildren(children, parentDOM) {
 
 export default {
   render,
+  createDom
 };

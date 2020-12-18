@@ -1,4 +1,4 @@
-import updateQueue from './Component'
+import {updateQueue} from './Component'
 /**
  * 将所有事件统一放置到document上面，通过冒泡阶段进行事件的分发至指定的DOM上
  * 这种合成方式也导致没法进行冒泡，可以在dispatchEvent通过循环模拟冒泡
