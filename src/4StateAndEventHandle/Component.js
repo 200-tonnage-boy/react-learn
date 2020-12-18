@@ -42,12 +42,13 @@ class Updater {
     let {state} = classInstance// 组件当前的state
     let newStete = pendingState.reduce((accumulator, currentValue) => {
       if(typeof currentValue === 'function') {
-        let res = currentValue(state)
-        return {...state, ...res}
+        return {...accumulator, ...currentValue(accumulator)}
       }else {// 不是函数就是对象，暂时不考虑其他情况
-        return {...state, ...currentValue}
+        return {...accumulator, ...currentValue}
       }
-    },[])
+    },state)
+
+    // console.log('新的state',newStete)
     return newStete
   }
 }
@@ -66,7 +67,7 @@ export class Component {
    * 另外还可能会传入函数
    */
   setState (partialState) {
-    console.log('my setState')
+    // console.log('my setState')
     this.$updater.addState(partialState)
   }
 

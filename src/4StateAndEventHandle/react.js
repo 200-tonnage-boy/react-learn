@@ -1,7 +1,7 @@
 import {Component} from "./Component";
 
 function createElement(type, config, children) {
-  console.log("mycreateElement");
+  // console.log("mycreateElement");
   if (config) {
     // 源代码里的 暂时无用
     delete config.__source;

@@ -1,7 +1,7 @@
-// import React from "react";
-// import ReactDOM from "react-dom";
-import React from "./4StateAndEventHandle/react";
-import ReactDOM from "./4StateAndEventHandle/react-dom";
+import React from "react";
+import ReactDOM from "react-dom";
+// import React from "./4StateAndEventHandle/react";
+// import ReactDOM from "./4StateAndEventHandle/react-dom";
 import "./index.css";
 
 class ClassComponents extends React.Component  {
@@ -17,15 +17,21 @@ class ClassComponents extends React.Component  {
 
   handleClickBtn = (e) => {
     console.log('Btn')
-    console.log(e)
+    this.setState({num: this.state.num+1})
+    this.setState({num: this.state.num+1,test:(function(){console.log('第二个setsate')})()})
+    this.setState((current) => {
+      console.log('第一个函数',current)
+      return {
+        num: current.num + 1
+      }
+    })
     this.setState({num: this.state.num+1})
     this.setState({num: this.state.num+1})
-    this.setState({num: this.state.num+1})
-    this.setState({num: this.state.num+1})
-    setTimeout(() => {
-      this.setState({num: this.state.num+1})
-      this.setState({num: this.state.num+1})
-    }, 0);
+    console.log(this.state.num)
+    // setTimeout(() => {
+    //   this.setState({num: this.state.num+1})
+    //   this.setState({num: this.state.num+1})
+    // }, 0);
    }
 
   componentDidMount () {

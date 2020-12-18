@@ -1,6 +1,6 @@
 import {addEvent} from './event'
 function render(VDom, parentDom) {
-  console.log("myrender");
+  // console.log("myrender");
   let dom = createDom(VDom); // 通过虚拟DOM生成真实DOM，
   parentDom.appendChild(dom); // 挂载到父节点上
 }
@@ -10,7 +10,7 @@ function render(VDom, parentDom) {
  */
 function createDom(vdom) {
   // debugger
-  console.log('createDom')
+  // console.log('createDom')
   // 布尔值JSX不会渲染，Array.length这种会渲染，因此不能用于条件渲染，都会输出到页面
   if (typeof vdom === "string" || typeof vdom === "number") {
     return document.createTextNode(vdom);
@@ -61,7 +61,7 @@ function undateClassComponent (vdom) {
   const {type:classComponents, props} = vdom// 给type起个别名，type就是class本身
   const classVDOMInstance = new classComponents(props)// 实例化
   const classVDOM = classVDOMInstance.render()// 调用render方法
-  console.log('test class render', classVDOM)
+  // console.log('test class render', classVDOM)
   const dom = createDom(classVDOM)
   classVDOMInstance.dom = dom// 类组件生成的实例上
   return dom
