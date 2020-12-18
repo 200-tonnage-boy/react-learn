@@ -40,6 +40,7 @@ class Updater {
   getState () {
     let {classInstance, pendingState} = this
     let {state} = classInstance// 组件当前的state
+    // debugger
     let newStete = pendingState.reduce((accumulator, currentValue) => {
       if(typeof currentValue === 'function') {
         return {...accumulator, ...currentValue(accumulator)}
@@ -47,7 +48,7 @@ class Updater {
         return {...accumulator, ...currentValue}
       }
     },state)
-
+    pendingState.length = 0
     // console.log('新的state',newStete)
     return newStete
   }

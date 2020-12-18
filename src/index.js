@@ -1,7 +1,7 @@
-import React from "react";
-import ReactDOM from "react-dom";
-// import React from "./4StateAndEventHandle/react";
-// import ReactDOM from "./4StateAndEventHandle/react-dom";
+// import React from "react";
+// import ReactDOM from "react-dom";
+import React from "./4StateAndEventHandle/react";
+import ReactDOM from "./4StateAndEventHandle/react-dom";
 import "./index.css";
 
 class ClassComponents extends React.Component  {
@@ -18,7 +18,7 @@ class ClassComponents extends React.Component  {
   handleClickBtn = (e) => {
     console.log('Btn')
     this.setState({num: this.state.num+1})
-    this.setState({num: this.state.num+1,test:(function(){console.log('第二个setsate')})()})
+    this.setState({num: this.state.num+1,test:(function(){console.log('第1个setsate')})()})
     this.setState((current) => {
       console.log('第一个函数',current)
       return {
@@ -26,8 +26,25 @@ class ClassComponents extends React.Component  {
       }
     })
     this.setState({num: this.state.num+1})
-    this.setState({num: this.state.num+1})
-    console.log(this.state.num)
+    this.setState({num: this.state.num+1,test:(function(){console.log('第2个setsate')})()})
+    this.setState((current) => {
+      console.log('第二个函数',current)
+      return {
+        num: current.num + 1
+      }
+    })
+
+    // Btn
+    // 第1个setsate
+    // 第2个setsate
+    // div
+    // 第一个函数 {num: 2, test: undefined}
+    // 第二个函数 {num: 2, test: undefined}
+
+
+    // this.setState({num: this.state.num+1})
+    // this.setState({num: this.state.num+1})
+    // console.log(this.state.num)
     // setTimeout(() => {
     //   this.setState({num: this.state.num+1})
     //   this.setState({num: this.state.num+1})
