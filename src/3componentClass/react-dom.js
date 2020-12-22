@@ -18,7 +18,7 @@ function createDom(vdom) {
   // 函数组件type为函数
   if (typeof type === "function") {
     // 函数组件 或者类组件
-    return type.isReactComponent// 类组件添加了这个静态属性用于鉴别
+    return type.isReactComponent // 类组件添加了这个静态属性用于鉴别
       ? undateClassComponent(vdom)
       : undateFunctionComponent(vdom);
     // return undateFunctionComponent(vdom)
@@ -56,11 +56,11 @@ function undateFunctionComponent(vdom) {
  * 更新类组件：返回真实的DOM对象
  * @param {*} vdom 虚拟DOM
  */
-function undateClassComponent (vdom) {
-  const {type, props} = vdom
-  const classVDOMInstance = new type(props)// 实例化
-  const ClassVDOM = classVDOMInstance.render()// 调用render方法
-  return createDom(ClassVDOM)
+function undateClassComponent(vdom) {
+  const { type, props } = vdom;
+  const classVDOMInstance = new type(props); // 实例化
+  const ClassVDOM = classVDOMInstance.render(); // 调用render方法
+  return createDom(ClassVDOM);
 }
 
 /**

@@ -33,9 +33,9 @@ let dd = React.createElement(
   "div",
   { style: { backgroundColor: "red", height: "40px" } },
   "div",
-  React.createElement("span",{style:{ color: "white" }},'测试')
+  React.createElement("span", { style: { color: "white" } }, "测试")
 );
-console.log('d',d,'dd',dd)
+console.log("d", d, "dd", dd);
 ReactDOM.render(dd, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,4 +1,4 @@
-import {addEvent} from './event'
+import { addEvent } from "./event";
 function render(VDom, parentDom) {
   // console.log("myrender");
   let dom = createDom(VDom); // 通过虚拟DOM生成真实DOM，
@@ -20,7 +20,7 @@ function createDom(vdom) {
   // 函数组件type为函数
   if (typeof type === "function") {
     // 函数组件 或者类组件
-    return type.isReactComponent// 类组件添加了这个静态属性用于鉴别
+    return type.isReactComponent // 类组件添加了这个静态属性用于鉴别
       ? undateClassComponent(vdom)
       : undateFunctionComponent(vdom);
   } else {
@@ -57,14 +57,14 @@ function undateFunctionComponent(vdom) {
  * 更新类组件：返回真实的DOM对象
  * @param {*} vdom 虚拟DOM
  */
-function undateClassComponent (vdom) {
-  const {type:classComponents, props} = vdom// 给type起个别名，type就是class本身
-  const classVDOMInstance = new classComponents(props)// 实例化
-  const classVDOM = classVDOMInstance.render()// 调用render方法
+function undateClassComponent(vdom) {
+  const { type: classComponents, props } = vdom; // 给type起个别名，type就是class本身
+  const classVDOMInstance = new classComponents(props); // 实例化
+  const classVDOM = classVDOMInstance.render(); // 调用render方法
   // console.log('test class render', classVDOM)
-  const dom = createDom(classVDOM)
-  classVDOMInstance.dom = dom// 类组件生成的实例上
-  return dom
+  const dom = createDom(classVDOM);
+  classVDOMInstance.dom = dom; // 类组件生成的实例上
+  return dom;
 }
 
 /**
@@ -81,9 +81,10 @@ function updateProps(dom, props) {
       }
     } else if (key === "children") {
       continue;
-    } else if (key.startsWith('on')){// 绑定事件
-      addEvent(dom, key.toLocaleLowerCase(), props[key])
-    }else {
+    } else if (key.startsWith("on")) {
+      // 绑定事件
+      addEvent(dom, key.toLocaleLowerCase(), props[key]);
+    } else {
       // dom是通过document.creatElement创建，返回值是一个对象，
       // 对象的属性就是ClassName代表实际DOM的class，因此这里可以直接赋值
       dom[key] = props[key];
@@ -104,5 +105,5 @@ function reconcileChildren(children, parentDOM) {
 
 export default {
   render,
-  createDom
+  createDom,
 };
