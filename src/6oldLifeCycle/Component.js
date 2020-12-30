@@ -27,17 +27,37 @@ class Updater {
   addState(partialState) {
     // 先对setState传进来的对象或者函数进行缓存，
     this.pendingState.push(partialState);
+    this.emitUpdate();
+
+    // 有了上面emitUpdate函数下面逻辑干掉
     // 判断当前是否处于批量更新的状态，如果处于的话就缓存，不处于的话就直接更新组件
-    updateQueue.isBatchingUpdate
-      ? updateQueue.add(this)
-      : this.updateComponent();
+    // updateQueue.isBatchingUpdate
+    //   ? updateQueue.add(this)
+    //   : this.updateComponent();
+  }
+  emitUpdate(nextProps) {
+    this.nextProps = nextProps;
+    if (this.componentWillReceiveProps) {
+      // TODO 这里是不是和下面的forceUpdate有重复？？？
+      // 生命周期钩子  注意顺序
+      this.componentWillReceiveProps(this.props); // 上面的代码中已经更新过props
+    }
+    // 如果有了新的props过来，或者当前没有处于批量更新模式，则直接更新组件，添加了一个props是否更新的判断
+    if (this.nextProps || !updateQueue.batchUpdate) {
+      this.updateComponent();
+    } else {
+      updateQueue.add(this);
+    }
   }
   updateComponent() {
-    let { classInstance, pendingState } = this;
-    if (pendingState.length > 0) {
-      // 有新增缓存的state
-      classInstance.state = this.getState(); // class组件的state是进行合并，可能传递进来的是函数，需要单独处理
-      classInstance.forceUpdate(); // 更新完state后重新渲染
+    let { classInstance, pendingState, nextProps } = this;
+    // 添加nextProps的判断，也就是有新的props传入或者有pendingstate的情况下才能真正更新；
+    if (pendingState.length > 0 || nextProps) {
+      // 此处先获取新的状态：this.getState()
+      shouldUpdate(classInstance, nextProps, this.getState());
+      // // 有新增缓存的state
+      // classInstance.state = this.getState(); // class组件的state是进行合并，可能传递进来的是函数，需要单独处理
+      // classInstance.forceUpdate(); // 更新完state后重新渲染
     }
   }
 
@@ -59,6 +79,23 @@ class Updater {
   }
 }
 
+function shouldUpdate(classInstance, nextProps, nextState) {
+  // 这说明shouldComponentUpdate只是控制组件是否重新渲染，
+  // 但是props和state都已经更新为最新的值
+  classInstance.props = nextProps || classInstance.props;
+  classInstance.state = nextState || classInstance.state;
+
+  // shouldComponentUpdate生命周期钩子返回值为false则不更新
+  if (
+    classInstance.shouldComponentUpdate &&
+    !classInstance.shouldComponentUpdate(nextProps, nextState)
+  ) {
+    return;
+  }
+  // 不满足上面情况：没有定义shouldComponentUpdate，或者返回值为true则更新组件
+  classInstance.forceUpdate();
+}
+
 // 类组件的实现基类 Name extends React.Component
 export class Component {
   constructor(props) {
@@ -78,11 +115,25 @@ export class Component {
   }
 
   forceUpdate() {
+    // if (this.componentWillReceiveProps) { 提升到上面去写
+    //   // 生命周期钩子  注意顺序
+    //   this.componentWillReceiveProps(this.props); // 上面的代码中已经更新过props
+    // }
+    // 改造：加入willUpdate和DidUpdate的判断和调用
+    if (this.componentWillUpdate) {
+      this.componentWillUpdate();
+    }
     let newVDOM = this.render(); // 新的虚拟DOM
+    // 这里会有dom-diff，没有的组件会调用unmount钩子
     let newDom = createDom(newVDOM); // 新的真实DOM
     let oldDom = this.dom; // 老的真实DOM// 在react-dom 里面的undateClassComponent函数中挂载的
     this.dom = newDom;
     oldDom.parentNode.replaceChild(newDom, oldDom); // 替换真实DOM
+
+    if (this.componentDidUpdate) {
+      // render之后调用
+      this.componentDidUpdate();
+    }
   }
 
   // class的本质也是函数，添加该属性用于根据type鉴别是函数组件还是类组件

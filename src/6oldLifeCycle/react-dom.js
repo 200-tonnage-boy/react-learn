@@ -63,6 +63,10 @@ function undateFunctionComponent(vdom) {
 function undateClassComponent(vdom) {
   const { type: classComponents, props, ref } = vdom; // 给type起个别名，type就是class本身
   const classVDOMInstance = new classComponents(props); // 实例化
+  if (classVDOMInstance.componentWillMount) {
+    // 生命周期钩子，有就调用，该钩子在render之前
+    classVDOMInstance.componentWillMount();
+  }
   if (ref) {
     ref.current = classVDOMInstance;
   }
@@ -70,6 +74,10 @@ function undateClassComponent(vdom) {
   // console.log('test class render', classVDOM)
   const dom = createDom(classVDOM);
   classVDOMInstance.dom = dom; // 类组件生成的实例上
+  // 此时已经调用了render函数，但是还没有插入页面？？？这里和真实的实现应该是有差距的；
+  if (classVDOMInstance.componentDidMount) {
+    classVDOMInstance.componentDidMount();
+  }
   return dom;
 }
 
